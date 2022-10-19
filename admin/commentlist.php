@@ -1,0 +1,72 @@
+<?php include 'inc/header.php';?>
+<?php include 'inc/sidebar.php';?>
+<?php include '../classes/brand.php';?>
+<?php include '../classes/category.php';?>
+<?php include '../classes/product.php';?>
+<?php include '../classes/customer.php';?>
+<?php include_once '../helpers/format.php';?>
+<?php
+	$cs = new customer();
+	$fm = new Format();
+	if(isset($_GET['binhluanid'])){
+        $id = $_GET['binhluanid']; 
+        $delcomment = $cs->del_comment($id);
+    }
+
+?>
+
+<div class="grid_10">
+    <div class="box round first grid">
+        <h2>Bình luận</h2>
+        <div class="block"> 
+        <?php
+        if(isset($delcomment)){
+        	echo $delcomment;
+        }
+        ?> 
+        	
+            <table class="data display datatable" id="example">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Tên sản phẩm</th>
+					<th>Tên người bình luận</th>
+					<th>Bình luận</th>
+					<th>Hoạt động</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php
+				
+				$cmlist = $cs->show_comment1();
+				if($cmlist){
+					$i = 0;
+					while($result = $cmlist->fetch_assoc()){
+						$i++;
+				?>
+				<tr class="odd gradeX">
+					<td><?php echo $i ?></td>
+					<td><?php echo $result['productName'] ?></td>
+					<td><?php echo $result['name'] ?></td>
+					<td><?php echo $result['binhluan'] ?></td>		
+					<td><a onclick = "return confirm('Bạn có muốn xóa?')"href="?binhluanid=<?php echo $result['binhluan_Id'] ?>">Xóa</a></td>
+				</tr>
+				<?php
+					}
+				}
+				?>
+			</tbody>
+		</table>
+
+       </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        setupLeftMenu();
+        $('.datatable').dataTable();
+		setSidebarHeight();
+    });
+</script>
+<?php include 'inc/footer.php';?>
